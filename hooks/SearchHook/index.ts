@@ -241,6 +241,11 @@ export const useSearchHook = (props: SearchHookProps) => {
 
         suggestions,
         currentMovingSuggestionIndex,
-        handleSuggestionRowPress
+        handleSuggestionRowPress,
+
+        handleBlurSearchTerm,
+        handleSearchBoxFocus,
+        handleCloseSuggestions,
+        showResetButton
     }
 }

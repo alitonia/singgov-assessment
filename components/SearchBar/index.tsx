@@ -15,6 +15,10 @@ interface SearchBarProps {
     currentMovingSuggestionIndex: number,
     handleSuggestionRowPress: (arg0: React.MouseEvent, arg1: string) => void,
 
+    handleBlurSearchTerm: (e: React.FocusEvent) => void,
+    handleSearchBoxFocus: () => void,
+    handleCloseSuggestions: () => void,
+    showResetButton: boolean,
 }
 
 export const SearchBar = (props: SearchBarProps) => {
@@ -29,7 +33,12 @@ export const SearchBar = (props: SearchBarProps) => {
 
         suggestions,
         currentMovingSuggestionIndex,
-        handleSuggestionRowPress
+        handleSuggestionRowPress,
+
+        handleBlurSearchTerm,
+        handleSearchBoxFocus,
+        handleCloseSuggestions,
+        showResetButton
     } = props
 
     const [inputLength, setInputLength] = React.useState(0);
@@ -65,7 +74,24 @@ export const SearchBar = (props: SearchBarProps) => {
                     placeholder="Search..."
                     className="text-[#282828] w-[100%] flex-grow px-6 py-3 border-solid  border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     onKeyDown={handleSearchKeyDown}
+                    onFocus={handleSearchBoxFocus}
+                    onBlur={handleBlurSearchTerm}
                 />
+                {showResetButton && (
+                    <span
+                        className={'text-[18px] p-[8px] absolute text-black hover:text-gray-500 flex justify-center items-center close-highlight-on-hover'}
+                        style={{marginLeft: `calc(${inputLength}px - 3rem)`, height: inputHeight}}
+                    >
+                    <button className={'clear-button'} onClick={handleCloseSuggestions}>
+                        <svg className="w-6 h-6 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                             focusable="false"
+                             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path
+                                d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
+                        </svg>
+                    </button>
+                </span>
+                )}
 
                 <span>
                     <button
