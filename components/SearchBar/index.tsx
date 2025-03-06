@@ -1,4 +1,6 @@
 import React, {useEffect} from "react";
+import {SuggestionRow} from "../SuggestionRow";
+import {CONFIG} from "../../const/config";
 
 interface SearchBarProps {
     searchTerm: string,
@@ -8,6 +10,11 @@ interface SearchBarProps {
     isLoading: boolean,
     handleSearchKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void,
     handleSearchButtonClick: () => void,
+
+    suggestions: string[],
+    currentMovingSuggestionIndex: number,
+    handleSuggestionRowPress: (arg0: React.MouseEvent, arg1: string) => void,
+
 }
 
 export const SearchBar = (props: SearchBarProps) => {
@@ -19,6 +26,10 @@ export const SearchBar = (props: SearchBarProps) => {
         isLoading,
         handleSearchKeyDown,
         handleSearchButtonClick,
+
+        suggestions,
+        currentMovingSuggestionIndex,
+        handleSuggestionRowPress
     } = props
 
     const [inputLength, setInputLength] = React.useState(0);
@@ -87,6 +98,23 @@ export const SearchBar = (props: SearchBarProps) => {
                 </button>
                 </span>
             </div>
+
+            {suggestions.length > 0 && (
+                <div className="suggestions border border-solid border-gray-300 absolute bg-white z-50"
+                     style={{width: `${inputLength}px`}}
+                >
+                    {suggestions.slice(0, CONFIG.MAX_SUGGESTIONS).map((t, index) => {
+                        return (
+                            <div key={t}>
+                                <SuggestionRow text={t}
+                                               highlight={index === currentMovingSuggestionIndex}
+                                               handlePress={handleSuggestionRowPress}
+                                />
+                            </div>
+                        )
+                    })}
+                </div>
+            )}
         </div>
     )
 }
