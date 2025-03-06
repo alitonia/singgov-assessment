@@ -1,10 +1,11 @@
 import React, {type KeyboardEvent, useEffect} from "react";
 
 import {Bounce, toast} from "react-toastify";
-import type {SearchResult} from "../../definitions/searchDefinitions";
+import type {SearchResult, SearchSuggestionResult} from "../../definitions/searchDefinitions";
 import {REQUEST_URL} from "../../const/requestURL";
 import {ERROR} from "../../const/error";
 import {useDebouncedCallback} from "use-debounce";
+import {useQuery} from "../shared/useQuery";
 
 
 interface SearchHookProps {
@@ -22,41 +23,61 @@ export const useSearchHook = (props: SearchHookProps) => {
 
     const [searchTerm, setSearchTerm] = React.useState('');
 
-    const [searchResult, setSearchResult] = React.useState<SearchResult | null>(null);
-    const [isLoading, setIsLoading] = React.useState(false);
-    const [error, setError] = React.useState<string | null>(null);
-
-    const [suggestions, setSuggestion] = React.useState<string[]>([]);
     const [currentMovingSuggestionIndex, setCurrentMovingSuggestionIndex] = React.useState(DEFAULT_INDEX);
 
     const [showResetButton, setShowResetButton] = React.useState(false);
     const [isFocused, setIsFocused] = React.useState(false);
 
+    const searchUrl = (function () {
+        const url = new URL(REQUEST_URL.DATA_API)
+        url.searchParams.set('text', searchTerm);
+        return url.toString();
+    })()
+
+    const {
+        fetchData: fetchSearchData,
+        isLoading: isLoadingSearch,
+        error: errorSearch,
+        data: searchResult
+    }: {
+        fetchData: () => Promise<void>,
+        isLoading: boolean,
+        error: string | null,
+        data: SearchResult | null
+    } = useQuery({
+        url: searchUrl
+    })
+
+
+    const {
+        fetchData: fetchSuggestionData,
+        data: suggestionData,
+        setData: _setSuggestionData,
+    }: {
+        fetchData: (arg0: string) => Promise<void>,
+        data: SearchSuggestionResult | null,
+        setData: (data: [] | null) => void
+    } = useQuery({})
+
+    useEffect(() => {
+        console.log(suggestionData)
+    }, [suggestionData])
+    
+    const suggestions = (suggestionData ? suggestionData.suggestions : null) || [];
+
+    const hideSuggestions = () => {
+        setCurrentMovingSuggestionIndex(DEFAULT_INDEX);
+        _setSuggestionData([]);
+    }
 
     const fetchSuggestions = async (term: string) => {
-        if (fetchSuggestionRef.current !== null) {
-            fetchSuggestionRef.current.abort();
-        }
-        try {
-            const controller = new AbortController();
-            fetchSuggestionRef.current = controller;
-
+        const suggestionUrl = (function () {
             const url = new URL(REQUEST_URL.SUGGESTIONS_API)
-            url.searchParams.set('text', searchTerm);
+            url.searchParams.set('text', term);
+            return url.toString();
+        })()
 
-            const response = await fetch(url.toString(), {signal: controller.signal});
-
-            if (!response.ok) {
-                throw new Error(ERROR.SUGGESTION_API_ERROR);
-            }
-            const data = await response.json();
-            fetchSuggestionRef.current = null;
-            // should have a dynamic API for this though
-            setSuggestion(data.suggestions);
-            setCurrentMovingSuggestionIndex(DEFAULT_INDEX);
-        } catch (error) {
-            console.error('Error fetching suggestions:', error);
-        }
+        fetchSuggestionData(suggestionUrl)
     };
 
     const debouncedFetchSuggestions = useDebouncedCallback(
@@ -80,51 +101,20 @@ export const useSearchHook = (props: SearchHookProps) => {
     const handleBlurSearchTerm = (e: React.FocusEvent) => {
         e.preventDefault()
         setTimeout(() => {
-            setSuggestion([]);
-            setCurrentMovingSuggestionIndex(DEFAULT_INDEX);
+            hideSuggestions()
         }, 100)
     }
 
     const handleBlur = (e: React.FocusEvent) => {
-            if (containerRef.current && !containerRef.current.contains(document.activeElement)) {
-                setIsFocused(false);
-                handleBlurSearchTerm(e);
-            }
+        if (containerRef.current && !containerRef.current.contains(document.activeElement)) {
+            setIsFocused(false);
+            handleBlurSearchTerm(e);
+        }
     };
 
     const handleStartSearch = async (searchTerm: string) => {
-
-        setIsLoading(true);
-        setError(null);
-        setSearchResult(null);
-        setCurrentMovingSuggestionIndex(DEFAULT_INDEX);
-        setSuggestion([]);
-
-        if (fetchDataRef.current !== null) {
-            fetchDataRef.current.abort();
-        }
-        try {
-            const controller = new AbortController();
-            fetchDataRef.current = controller;
-
-            const url = new URL(REQUEST_URL.DATA_API)
-            url.searchParams.set('text', searchTerm);
-
-            const response = await fetch(url.toString(), {signal: controller.signal});
-
-            if (!response.ok) {
-                throw new Error(ERROR.NETWORK_ERROR);
-            }
-            const data = await response.json();
-            fetchDataRef.current = null;
-            setSearchResult(data);
-
-        } catch (error) {
-            console.error('Error fetching search results:', error);
-            setError(ERROR.DATA_API_ERROR);
-        } finally {
-            setIsLoading(false);
-        }
+        hideSuggestions()
+        fetchSearchData()
     }
 
     const handleEnterPress = () => {
@@ -167,7 +157,7 @@ export const useSearchHook = (props: SearchHookProps) => {
     }
 
     const handleSearchButtonClick = () => {
-        if (isLoading) {
+        if (isLoadingSearch) {
             return
         }
         return handleStartSearch(searchTerm);
@@ -184,7 +174,7 @@ export const useSearchHook = (props: SearchHookProps) => {
                 if (searchTerm.length > 2) {
                     debouncedFetchSuggestions(searchTerm);
                 } else {
-                    setSuggestion([]);
+                    hideSuggestions()
                 }
                 return searchTerm;
             }
@@ -193,8 +183,7 @@ export const useSearchHook = (props: SearchHookProps) => {
     };
 
     const handleCloseSuggestions = () => {
-        setSuggestion([]);
-        setCurrentMovingSuggestionIndex(DEFAULT_INDEX);
+        hideSuggestions()
         setShowResetButton(false);
         setSearchTerm('');
         setTimeout(() => inputRef.current?.focus())
@@ -203,8 +192,7 @@ export const useSearchHook = (props: SearchHookProps) => {
     const handleSuggestionRowPress = (e: React.MouseEvent, text: string) => {
         setSearchTerm(text);
 
-        setSuggestion([]);
-        setCurrentMovingSuggestionIndex(DEFAULT_INDEX);
+        hideSuggestions()
         return handleStartSearch(text)
     }
 
@@ -227,23 +215,23 @@ export const useSearchHook = (props: SearchHookProps) => {
     }
 
     useEffect(() => {
-        if (error) {
-            showErrorToast(error)
+        if (errorSearch) {
+            showErrorToast(errorSearch)
         }
-    }, [error])
+    }, [errorSearch])
 
     return {
         searchTerm,
         handleChangeSearchTerm,
         inputRef,
         containerRef,
-        isLoading,
+        isLoading: isLoadingSearch,
         handleSearchKeyDown,
         handleSearchButtonClick,
 
         handleStartSearch,
         searchResult,
-        error,
+        error: errorSearch,
 
         suggestions,
         currentMovingSuggestionIndex,
