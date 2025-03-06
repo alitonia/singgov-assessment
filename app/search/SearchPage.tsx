@@ -3,6 +3,7 @@ import {Link} from "react-router";
 import {SearchBar} from "../../components/SearchBar";
 import {SearchResultList} from "../../components/SearchResultList";
 import {useSearchHook} from "../../hooks/SearchHook";
+import {ToastContainer} from "react-toastify";
 
 export const SearchPage = () => {
     const talons = useSearchHook({
@@ -17,6 +18,8 @@ export const SearchPage = () => {
                 <SearchBar {...talons} />
                 <SearchResultList {...talons} />
             </div>
+
+            <ToastContainer/>
 
             <Link to="/" className="mt-8 text-blue-500 hover:underline">
                 Back to Home
