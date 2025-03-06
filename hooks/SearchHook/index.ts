@@ -130,6 +130,10 @@ export const useSearchHook = (props: SearchHookProps) => {
     }
 
     const handleEnterPress = () => {
+        if (currentMovingSuggestionIndex >= 0 && currentMovingSuggestionIndex < suggestions.length) {
+            setSearchTerm(suggestions[currentMovingSuggestionIndex]);
+            return handleStartSearch(suggestions[currentMovingSuggestionIndex])
+        }
         return handleStartSearch(searchTerm)
     }
 
