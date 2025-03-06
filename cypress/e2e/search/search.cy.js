@@ -1,6 +1,8 @@
 describe('Search Functionality', () => {
     beforeEach(() => {
         cy.visit('/');
+        // wait 2 seconds to allow the page to load and not dos the API calls
+        cy.wait(1000);
     });
     // basic functions
     it('should display the search bar', () => {
@@ -82,6 +84,23 @@ describe('Search Functionality', () => {
         cy.get('.suggestions').should('not.exist');
         cy.get('input[type="text"]').should('have.value', 'child care');
     });
+
+    it('mix and match between arrow and mouse hover', () => {
+        cy.get('input[type="text"]').type('chi');
+        cy.get('.suggestions').should('be.visible');
+        cy.get('.suggestions > div').should('have.length.gt', 0);
+        // arrow down
+        cy.get('input[type="text"]').type('{downarrow}');
+        cy.get('.suggestions > div').eq(1).get('div').should('have.class', 'highlight');
+        // mouse hover
+        cy.get('.suggestions > div').eq(3).trigger('mouseenter');
+        cy.get('.suggestions > div').eq(3).get('div').should('have.class', 'highlight');
+        cy.get('.suggestions > div').eq(3).trigger('mouseleave');
+
+        // arrow up
+        cy.get('input[type="text"]').type('{uparrow}');
+        cy.get('.suggestions > div').eq(2).get('div').should('have.class', 'highlight');
+    })
 
     // Task 2c
     it('not show clear button when input is empty', () => {

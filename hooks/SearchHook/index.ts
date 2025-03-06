@@ -80,18 +80,16 @@ export const useSearchHook = (props: SearchHookProps) => {
     const handleBlurSearchTerm = (e: React.FocusEvent) => {
         e.preventDefault()
         setTimeout(() => {
-            // setSuggestion([]);
+            setSuggestion([]);
             setCurrentMovingSuggestionIndex(DEFAULT_INDEX);
         }, 100)
     }
 
     const handleBlur = (e: React.FocusEvent) => {
-        setTimeout(() => {
             if (containerRef.current && !containerRef.current.contains(document.activeElement)) {
                 setIsFocused(false);
                 handleBlurSearchTerm(e);
             }
-        }, 0);
     };
 
     const handleStartSearch = async (searchTerm: string) => {
@@ -210,6 +208,10 @@ export const useSearchHook = (props: SearchHookProps) => {
         return handleStartSearch(text)
     }
 
+    const handleMouseEnterSuggestionRow = (e: React.MouseEvent, index: number) => {
+        setCurrentMovingSuggestionIndex(index);
+    }
+
     const showErrorToast = (text: string) => {
         toast.error(text, {
             position: "bottom-right",
@@ -250,6 +252,8 @@ export const useSearchHook = (props: SearchHookProps) => {
         handleBlurSearchTerm,
         handleSearchBoxFocus,
         handleCloseSuggestions,
-        showResetButton
+        showResetButton,
+
+        handleMouseEnterSuggestionRow
     }
 }

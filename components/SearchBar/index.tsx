@@ -19,6 +19,8 @@ interface SearchBarProps {
     handleSearchBoxFocus: () => void,
     handleCloseSuggestions: () => void,
     showResetButton: boolean,
+
+    handleMouseEnterSuggestionRow: (arg0: React.MouseEvent, arg1?: number) => void,
 }
 
 export const SearchBar = (props: SearchBarProps) => {
@@ -38,7 +40,9 @@ export const SearchBar = (props: SearchBarProps) => {
         handleBlurSearchTerm,
         handleSearchBoxFocus,
         handleCloseSuggestions,
-        showResetButton
+        showResetButton,
+
+        handleMouseEnterSuggestionRow
     } = props
 
     const [inputLength, setInputLength] = React.useState(0);
@@ -131,8 +135,13 @@ export const SearchBar = (props: SearchBarProps) => {
                 >
                     {suggestions.slice(0, CONFIG.MAX_SUGGESTIONS).map((t, index) => {
                         return (
-                            <div key={t}>
+                            <div key={t}
+                                 onMouseEnter={(e) => {
+                                     handleMouseEnterSuggestionRow(e, index)
+                                 }}
+                            >
                                 <SuggestionRow text={t}
+                                               currentIndex={index}
                                                highlight={index === currentMovingSuggestionIndex}
                                                handlePress={handleSuggestionRowPress}
                                 />

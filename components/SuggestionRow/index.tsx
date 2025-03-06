@@ -5,10 +5,15 @@ interface SuggestionRowProps {
     text: string,
     highlight: boolean,
     handlePress: (arg0: React.MouseEvent, arg1: string) => void,
+    currentIndex?: number,
 }
 
 export const SuggestionRow = (props: SuggestionRowProps) => {
-    const {text, highlight, handlePress} = props;
+    const {
+        text,
+        highlight,
+        handlePress,
+    } = props;
 
     return (
         <div className={
@@ -20,6 +25,7 @@ export const SuggestionRow = (props: SuggestionRowProps) => {
              onClick={(e) => {
                  handlePress(e, text)
              }}
+
         >
             <span className={'suggestion-text-value'}>{text}</span>
         </div>

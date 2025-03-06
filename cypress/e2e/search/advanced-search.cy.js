@@ -1,6 +1,8 @@
 describe('Advanced Search Functionality With Api Mock', () => {
     beforeEach(() => {
         cy.visit('/');
+        // wait 2 seconds to allow the page to load and not dos the API calls
+        cy.wait(1000);
     });
     // Task 1a
     it('should perform a search when clicking the search button', () => {
