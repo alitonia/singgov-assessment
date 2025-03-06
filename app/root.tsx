@@ -11,6 +11,9 @@ import type {Route} from "./+types/root";
 import "./reset.css"
 import "./app.css";
 
+// Mock data to make requests more interactive
+import "../mock/globalMock"
+
 export const links: Route.LinksFunction = () => [
     {rel: "preconnect", href: "https://fonts.googleapis.com"},
     {
