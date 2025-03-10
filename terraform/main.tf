@@ -17,7 +17,7 @@ resource "aws_instance" "app_server" {
               sudo yum update -y
               sudo yum install -y nodejs npm
               sudo npm install -g pm2
-              git clone https://github.com/alitonia/frontend-test.git
+              git clone https://github.com/alitonia/singgov-assessment.git
               cd frontend-test
               npm install
               npm run build
