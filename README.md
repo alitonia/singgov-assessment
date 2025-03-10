@@ -1,21 +1,29 @@
-# React App Singgov
+# Singgov FE Assignment - 2025
 
-This project is a React application built with React Router, featuring server-side rendering, TypeScript, and
-TailwindCSS.
+This project is a FE-only assignment, that allows user to search information on child development.
 
 ## Getting Started
+
+- 🔗 [Prerequisites](#prerequisites)
+- ⚙️ [Installation](#installation)
+- 🚄 [Running the Application](#running-the-application)
+- 🧪 [Building for Production](#building-for-production)
+- 🧱 [Testing](#testing)
+- 📷 [Docker Deployment](#docker-deployment)
+- 📝 [Gitlab CI deployment](#gitlab-ci-deployment)
 
 ### Prerequisites
 
 - Node.js (version 22 or later)
 - npm (comes with Node.js)
+- Docker (optional)
 
 ### Installation
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/alitonia/frontend-test
-   cd frontend-test
+   git clone https://github.com/alitonia/singgov-assessment
+   cd singgov-assessment
    ```
 
 2. Install dependencies:
@@ -66,9 +74,13 @@ docker build -t frontend-test .
 docker run -p 3000:3000 frontend-test
 ```
 
-## Gitlab deployment
+## Gitlab CI deployment
 
-Set up the following variables in your GitLab project (Settings > CI/CD > Variables):
+This deployment will push you code to an EC2 instance.
+
+Make sure that you have Gitlab CI and Terraform installed, and properly configured.
+
+Set up the following variables in your GitLab runner project (Settings > CI/CD > Variables):
 
 * SSH_PRIVATE_KEY: Your EC2 instance's SSH private key
 * EC2_HOST: Your EC2 instance's public DNS or IP address
