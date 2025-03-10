@@ -15,13 +15,14 @@ resource "aws_instance" "app_server" {
   user_data = <<-EOF
               #!/bin/bash
               sudo yum update -y
+              curl -fsSL https://rpm.nodesource.com/setup_22.x | sudo bash -
               sudo yum install -y nodejs npm
-              sudo npm install -g pm2
+              sudo yum install git
               git clone https://github.com/alitonia/singgov-assessment.git
-              cd frontend-test
-              npm install
+              cd singgov-assessment
+              npm ci
               npm run build
-              pm2 start npm --name "frontend-test" -- start
+              PORT=80 npm run start
               EOF
 }
 
