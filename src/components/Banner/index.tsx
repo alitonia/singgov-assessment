@@ -7,7 +7,7 @@ export const Banner = (props: BannerProps) => {
 
     return (
         <div
-            className="absolute top-0 left-0 right-0 p-0 bg-[#f0f0f0] text-[#5b5b5b] text-center flex justify-center items-center text-xs md:justify-start md:pl-[20%]">
+            className="absolute top-0 left-0 right-0 p-0 bg-[#f0f0f0] text-[#5b5b5b] text-center flex justify-center items-center text-xs md:justify-start lg:px-[15%] md:px-[5%]">
                 <span className={'p-3'}>
                     <img src={'/image/singapore-logo.svg'}
                          alt={'singapore logo'}
