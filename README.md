@@ -99,3 +99,23 @@ The pipeline will automatically run when you push changes to the main branch. To
 ## Deployment sample
 
 A sample of this application is deployed to http://13.239.169.213:80 using an EC2 instance.
+
+## Preview
+
+## Preview
+
+* Desktop view
+
+  ![Preview Image](docs/images/desktop_screenshot.png)
+
+* Mobile view
+
+  ![Preview Image](docs/images/mobile_screensshot.png)
+
+* Empty search view
+
+  ![Preview Image](docs/images/empty_search.png)
+
+* Network error
+
+  ![Preview Image](docs/images/network_error.png)
