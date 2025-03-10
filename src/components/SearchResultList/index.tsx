@@ -1,5 +1,4 @@
 import React from "react";
-import classNames from "classnames";
 import type {SearchResult} from "../../definitions/searchDefinitions";
 import {SearchResultRecord} from "../SearchResultRecord";
 

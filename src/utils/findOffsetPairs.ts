@@ -1,5 +1,7 @@
 // find all start and end index of the substring in the main string
 export function findOffsetPairs(mainString: string, substring: string) {
+    if (mainString.length === 0 || substring.length === 0) return []
+
     try {
         const result: number[] = [];
         let index = mainString.toLowerCase().indexOf(substring.toLowerCase());

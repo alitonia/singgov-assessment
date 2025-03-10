@@ -1,0 +1,41 @@
+stages:
+  - build
+  - test
+  - deploy
+
+variables:
+  DOCKER_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+
+build:
+  stage: build
+  image: node:22
+  script:
+    - npm ci
+    - npm run build
+  artifacts:
+    paths:
+      - build/
+
+test:
+  stage: test
+  image: cypress/base:22
+  script:
+    - npm ci
+    - npm test
+    - npm run cypress:run
+
+deploy:
+  stage: deploy
+  image: 
+    name: hashicorp/terraform:light
+    entrypoint: [""]
+  before_script:
+    - cd terraform
+    - terraform init
+  script:
+    - terraform apply -auto-approve
+    - EC2_IP=$(terraform output -raw public_ip)
+    - cd ..
+    - scp -i $SSH_PRIVATE_KEY -r build/* ec2-user@$EC2_IP:/var/www/html/
+  only:
+    - main

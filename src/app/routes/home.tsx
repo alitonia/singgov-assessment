@@ -1,5 +1,5 @@
-import type {Route} from "./+types/home";
-import {SearchPage} from "~/search/SearchPage";
+import type {Route} from "../../../.react-router/types/app/routes/+types";
+import {SearchPage} from "../search/SearchPage";
 
 export function meta({}: Route.MetaArgs) {
     return [
