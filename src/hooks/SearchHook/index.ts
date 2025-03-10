@@ -106,12 +106,10 @@ export const useSearchHook = (props: SearchHookProps) => {
     }
 
     const handleBlur = (e: React.FocusEvent) => {
-        setTimeout(() => {
-            if (containerRef.current && !containerRef.current.contains(document.activeElement)) {
-                setIsFocused(false);
-                handleBlurSearchTerm(e);
-            }
-        }, 100)
+        if (containerRef.current && !containerRef.current.contains(document.activeElement)) {
+            setIsFocused(false);
+            handleBlurSearchTerm(e);
+        }
     };
 
     const handleStartSearch = async (searchTerm: string) => {
