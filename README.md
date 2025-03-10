@@ -55,9 +55,13 @@ The build output will be in the `build` directory.
 
 This project uses Jest for unit testing and Cypress for end-to-end testing.
 
+For unit testing
+
 ```bash
-npm run test
+npm run test:ut
 ```
+
+For e2e testing
 
 ```bash
 npm run cypress:open
@@ -92,5 +96,6 @@ The pipeline will automatically run when you push changes to the main branch. To
 * Navigate to CI/CD > Pipelines.
 * Click "Run Pipeline" and select the main branch.
 
+## Deployment sample
 
-
+A sample of this application is deployed to http://13.239.169.213:80 using an EC2 instance.
