@@ -24,7 +24,7 @@ export const SearchResultRecord = (props: SearchResultItemProps) => {
                 />
             </h5>
 
-            <h6 className={'text-[#777]'}>
+            <h6 className={'text-[#777] result-link'}>
                 <Link to={result.DocumentURI}>
                     {result.DocumentURI}
                 </Link>

@@ -34,12 +34,15 @@ export const SearchResultList = (props: SearchResultProps) => {
     } = searchResult
 
     const pageCount = Math.ceil(TotalNumberOfResults / PageSize)
+    const isEmpty = TotalNumberOfResults === 0
 
     return (
         <div className={'py-12'}>
             <div className="flex items-center justify-between">
                 <span
-                    className={"text-[#282828] font-semibold text-xl"}>{`Showing ${Page}/${pageCount} of ${TotalNumberOfResults} results`}</span>
+                    className={"text-[#282828] font-semibold text-xl"}>
+                    {isEmpty ? "No result found" : `Showing ${Page}/${pageCount} of ${TotalNumberOfResults} results`}
+                </span>
             </div>
             <div className="search-result-list py-11 flex flex-col gap-4">
                 {ResultItems.map((result) => {

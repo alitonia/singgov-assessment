@@ -23,3 +23,8 @@ body {
     border: none;
 }
 
+.result-link {
+    overflow-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

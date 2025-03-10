@@ -62,7 +62,7 @@ export const useSearchHook = (props: SearchHookProps) => {
     useEffect(() => {
         console.log(suggestionData)
     }, [suggestionData])
-    
+
     const suggestions = (suggestionData ? suggestionData.suggestions : null) || [];
 
     const hideSuggestions = () => {
@@ -102,14 +102,16 @@ export const useSearchHook = (props: SearchHookProps) => {
         e.preventDefault()
         setTimeout(() => {
             hideSuggestions()
-        }, 100)
+        }, 200)
     }
 
     const handleBlur = (e: React.FocusEvent) => {
-        if (containerRef.current && !containerRef.current.contains(document.activeElement)) {
-            setIsFocused(false);
-            handleBlurSearchTerm(e);
-        }
+        setTimeout(() => {
+            if (containerRef.current && !containerRef.current.contains(document.activeElement)) {
+                setIsFocused(false);
+                handleBlurSearchTerm(e);
+            }
+        }, 100)
     };
 
     const handleStartSearch = async (searchTerm: string) => {
@@ -122,6 +124,7 @@ export const useSearchHook = (props: SearchHookProps) => {
             setSearchTerm(suggestions[currentMovingSuggestionIndex]);
             return handleStartSearch(suggestions[currentMovingSuggestionIndex])
         }
+        hideSuggestions()
         return handleStartSearch(searchTerm)
     }
 
