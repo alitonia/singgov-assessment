@@ -28,24 +28,17 @@ export const useSearchHook = (props: SearchHookProps) => {
     const [showResetButton, setShowResetButton] = React.useState(false);
     const [isFocused, setIsFocused] = React.useState(false);
 
-    const searchUrl = (function () {
-        const url = new URL(REQUEST_URL.DATA_API)
-        url.searchParams.set('text', searchTerm);
-        return url.toString();
-    })()
-
     const {
         fetchData: fetchSearchData,
         isLoading: isLoadingSearch,
         error: errorSearch,
         data: searchResult
     }: {
-        fetchData: () => Promise<void>,
+        fetchData: (searchUrl: string) => Promise<void>,
         isLoading: boolean,
         error: string | null,
         data: SearchResult | null
     } = useQuery({
-        url: searchUrl
     })
 
 
@@ -113,8 +106,14 @@ export const useSearchHook = (props: SearchHookProps) => {
     };
 
     const handleStartSearch = async (searchTerm: string) => {
+
+        const searchUrl = (function () {
+            const url = new URL(REQUEST_URL.DATA_API)
+            url.searchParams.set('text', searchTerm);
+            return url.toString();
+        })()
         hideSuggestions()
-        fetchSearchData()
+        fetchSearchData(searchUrl)
     }
 
     const handleEnterPress = () => {

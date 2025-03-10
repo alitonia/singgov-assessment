@@ -32,6 +32,8 @@ globalObj.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<
         return originalFetch(input, init);
     }
 
+    console.log("filter with", text)
+
     url.searchParams.delete('text')
 
     const response = await originalFetch(url, init);
